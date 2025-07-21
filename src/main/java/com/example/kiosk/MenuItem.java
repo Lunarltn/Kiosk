@@ -14,14 +14,17 @@ public class MenuItem {
         this.comment = comment;
     }
 
+    //getter
     public String getName() {
         return name;
     }
 
+    //getter
     public double getPrice() {
         return price;
     }
 
+    //getter
     public String getComment() {
         return comment;
     }
