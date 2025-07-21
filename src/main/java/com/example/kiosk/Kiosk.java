@@ -68,7 +68,7 @@ public class Kiosk {
      * @param menu      메뉴 항목을 출력하는 데 사용되는 {@link Menu}의 인스턴스
      * @throws InputMismatchException 잘못된 번호 입력시 발생
      */
-    void startMenu(List<MenuItem> menuItems, Menu menu) throws InputMismatchException {
+    private void startMenu(List<MenuItem> menuItems, Menu menu) throws InputMismatchException {
         Scanner sc = new Scanner(System.in);
 
         for (int i = 0; i < menuItems.size(); i++) {

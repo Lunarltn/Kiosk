@@ -7,9 +7,9 @@ import java.util.List;
  * MenuItem 클래스를 관리하는 클래스
  */
 public class Menu {
-    List<MenuItem> burgerMenuItems = new ArrayList<MenuItem>();
-    List<MenuItem> drinksMenuItems = new ArrayList<MenuItem>();
-    List<MenuItem> dessertsMenuItems = new ArrayList<MenuItem>();
+    private List<MenuItem> burgerMenuItems = new ArrayList<MenuItem>();
+    private List<MenuItem> drinksMenuItems = new ArrayList<MenuItem>();
+    private List<MenuItem> dessertsMenuItems = new ArrayList<MenuItem>();
 
     //getter
     public List<MenuItem> getBurgersMenuItems() {
@@ -24,6 +24,21 @@ public class Menu {
     //getter
     public List<MenuItem> getDessertsMenuItems() {
         return dessertsMenuItems;
+    }
+
+    //setter
+    public void setBurgersMenuItems(List<MenuItem> burgerMenuItems) {
+        this.burgerMenuItems = burgerMenuItems;
+    }
+
+    //setter
+    public void setDrinksMenuItems(List<MenuItem> drinksMenuItems) {
+        this.drinksMenuItems = drinksMenuItems;
+    }
+
+    //setter
+    public void setDessertsMenuItems(List<MenuItem> dessertsMenuItems) {
+        this.dessertsMenuItems = dessertsMenuItems;
     }
 
     //버거 메뉴 카테고리 이름 반환

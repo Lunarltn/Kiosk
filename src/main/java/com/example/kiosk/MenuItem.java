@@ -28,4 +28,19 @@ public class MenuItem {
     public String getComment() {
         return comment;
     }
+
+    //setter
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    //setter
+    public void setPrice(double price) {
+        this.price = price;
+    }
+    
+    //setter
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 }
