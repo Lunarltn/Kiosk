@@ -28,17 +28,17 @@ public class Menu {
     }
 
     //setter
-    public void setBurgersMenuItems(String name, double price, String comment) {
+    public void addBurgersMenuItem(String name, double price, String comment) {
         burgerMenuItems.add(new MenuItem(name, price, comment));
     }
 
     //setter
-    public void setDrinksMenuItems(String name, double price, String comment) {
+    public void addDrinksMenuItem(String name, double price, String comment) {
         drinksMenuItems.add(new MenuItem(name, price, comment));
     }
 
     //setter
-    public void setDessertsMenuItems(String name, double price, String comment) {
+    public void addDessertsMenuItem(String name, double price, String comment) {
         dessertsMenuItems.add(new MenuItem(name, price, comment));
     }
 
@@ -55,19 +55,5 @@ public class Menu {
     //디저트 메뉴 카테고리 이름 반환
     public String getDessertsMenuName() {
         return "[ DESSERTS MENU ]";
-    }
-
-    /**
-     * {@link MenuItem}의 {@link List}로 부터 {@code idx}에 맞는 {@link MenuItem}을 한줄로 콘솔에 출력한다.
-     *
-     * @param menuItems 출력할 {@link List}
-     * @param idx       {@link List}의 index
-     */
-    public void viewMenuItem(List<MenuItem> menuItems, int idx) {
-        if (0 <= idx && menuItems.size() > idx) {
-            System.out.print(menuItems.get(idx).getName() + " | ");
-            System.out.print("W " + menuItems.get(idx).getPrice() + " | ");
-            System.out.println(menuItems.get(idx).getComment());
-        }
     }
 }
