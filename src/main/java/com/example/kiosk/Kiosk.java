@@ -1,5 +1,9 @@
 package com.example.kiosk;
 
+import com.example.enums.MenuType;
+import com.example.enums.User;
+
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.List;
@@ -9,11 +13,10 @@ import java.util.List;
  */
 public class Kiosk {
     private final Menu menu;
-    private final Cart cart;
+    private final Cart cart = new Cart();
 
-    public Kiosk(Menu menu, Cart cart) {
+    public Kiosk(Menu menu) {
         this.menu = menu;
-        this.cart = cart;
     }
 
     /**
@@ -39,20 +42,17 @@ public class Kiosk {
                 int selection = sc.nextInt();
                 switch (selection) {
                     case 1:
-                        System.out.println(menu.getBurgersMenuName());
-                        runMenu(menu.getBurgersMenuItems());
+                        runMenu(MenuType.Burger);
                         break;
                     case 2:
-                        System.out.println(menu.getDrinksMenuName());
-                        runMenu(menu.getDrinksMenuItems());
+                        runMenu(MenuType.Drink);
                         break;
                     case 3:
-                        System.out.println(menu.getDessertsMenuName());
-                        runMenu(menu.getDessertsMenuItems());
+                        runMenu(MenuType.Dessert);
                         break;
                     case 4:
                         if (cart.getCart().isEmpty()) throw new InputMismatchException();
-                        runOrder();
+                        runOrderWithDiscount();
                         break;
                     case 5:
                         if (cart.getCart().isEmpty()) throw new InputMismatchException();
@@ -73,18 +73,21 @@ public class Kiosk {
     }
 
     /**
-     * 주어진 {@code menuItems} 항목을 콘솔에 출력하고, 사용자의 선택을 처리한다.
+     * 주어진 메뉴 타입의 항목을 콘솔에 출력하고, 사용자의 선택을 처리한다.
      *
-     * <p>{@code menuItems} 항목의 {@link MenuItem}들을 콘솔에 출력하고,
+     * <p>메뉴 타입에 맞는 {@link MenuItem}들을 콘솔에 출력하고,
      * 입력에 맞는 {@link MenuItem}을 장바구니에 담는다.
      * 0과 메뉴 이외의 숫자나 문자를 입력한 경우 {@link MenuItem}들을 콘솔에 출력하고 다시 입력을 받는다.</p>
      *
-     * @param menuItems 출력할 {@link MenuItem}의 {@link List}
+     * @param menuType 출력할 메뉴의 타입
      */
-    private void runMenu(List<MenuItem> menuItems) {
+    private void runMenu(MenuType menuType) {
         Scanner sc = new Scanner(System.in);
+        List<MenuItem> menuItems = menu.getMenuItems(menuType);
 
         while (true) {
+            System.out.println(menuType.getMenuName());
+
             for (int i = 0; i < menuItems.size(); i++) {
                 System.out.println(i + 1 + ". " + menuItems.get(i).formatMenuItem());
             }
@@ -117,31 +120,66 @@ public class Kiosk {
     }
 
     /**
-     * 카트에 담긴 주문들을 출력하고, 사용자의 선택을 처리한다.
+     * 카트에 담긴 주문들을 출력하고, 주문을 받으면 주문총액에 할인율을 적용해 출력한다.
      *
      * <p>카트에 담긴 아이템들과 합계를 출력하고,
      * 사용자의 입력을 받아 주문을 처리한다.
+     * 주문시 할인 유형을 입력받아 할인율을 적용한 주문총액을 콘솔에 출력한다.
      * 0과 메뉴 이외의 숫자나 문자를 입력한 경우 주문이 취소된다.</p>
      */
-    private void runOrder() {
+    private void runOrderWithDiscount() {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("아래와 같이 주문 하시겠습니까?");
-        System.out.println("\n[ Orders ]");
-        cart.printCartList();
-        System.out.println("\n[ Total ]");
-        System.out.println("W " + cart.getCartTotalPrice());
-        System.out.println("\n1. 주문      2. 메뉴판");
-        try {
-            int menuSelection = sc.nextInt();
-            if (menuSelection == 1) {
-                System.out.println("\n주문이 완료되었습니다. 금액은 W " + cart.getCartTotalPrice() + " 입니다.");
+        while (true) {
+            System.out.println("아래와 같이 주문 하시겠습니까?");
+            System.out.println("\n[ Orders ]");
+            cart.printCartList();
+            System.out.println("\n[ Total ]");
+            System.out.println("W " + cart.getCartTotalPrice());
+            System.out.println("\n1. 주문      2. 메뉴판");
+            try {
+                int menuSelection = sc.nextInt();
+                if (menuSelection == 1) {
+                    runDiscount();
+                    break;
+                } else if (menuSelection == 2)
+                    break;
+                else throw new InputMismatchException();
+            } catch (InputMismatchException e) {
+                System.out.println("[Error] 입력이 올바르지 않습니다.");
+            }
+        }
+    }
+
+    /**
+     * 할인 정보를 입력받아 할인율이 적용된 주문총액을 콘솔에 출력한다.
+     *
+     * <p>장바구니에 담긴 메뉴들의 총액에 할인율을 적용해 출력하고, 장바구니를 비운다.</p>
+     */
+    void runDiscount() {
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("할인 정보를 입력해주세요.");
+            for (int i = 0; i < User.values().length; i++) {
+                User user = User.values()[i];
+                System.out.println(i + 1 + ". " + user.getName() + " : " + (user.getDiscount() * 100) + "%");
+            }
+            try {
+                int discountSelection = sc.nextInt();
+                if (!(discountSelection > 0 && discountSelection <= User.values().length))
+                    throw new InputMismatchException();
+
+                double totalPrice = cart.getCartTotalPrice()
+                        - cart.getCartTotalPrice()
+                        * User.values()[discountSelection - 1].getDiscount();
+
+                System.out.println("\n주문이 완료되었습니다. 금액은 W " + String.format("%.2f", totalPrice) + " 입니다.");
                 cart.clearCart();
-            } else if (menuSelection == 2)
-                return;
-            else throw new InputMismatchException();
-        } catch (InputMismatchException e) {
-            System.out.println("[Error] 입력이 올바르지 않습니다.");
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("[Error] 입력이 올바르지 않습니다.");
+            }
         }
     }
 
