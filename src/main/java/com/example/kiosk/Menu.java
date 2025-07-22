@@ -7,38 +7,39 @@ import java.util.List;
  * MenuItem 클래스를 관리하는 클래스
  */
 public class Menu {
-    private List<MenuItem> burgerMenuItems = new ArrayList<MenuItem>();
-    private List<MenuItem> drinksMenuItems = new ArrayList<MenuItem>();
-    private List<MenuItem> dessertsMenuItems = new ArrayList<MenuItem>();
+    private final List<MenuItem> burgerMenuItems = new ArrayList<MenuItem>();
+    private final List<MenuItem> drinksMenuItems = new ArrayList<MenuItem>();
+    private final List<MenuItem> dessertsMenuItems = new ArrayList<MenuItem>();
 
     //getter
     public List<MenuItem> getBurgersMenuItems() {
-        return burgerMenuItems;
+        return List.copyOf(burgerMenuItems);
     }
 
     //getter
     public List<MenuItem> getDrinksMenuItems() {
-        return drinksMenuItems;
+        return List.copyOf(drinksMenuItems);
     }
 
     //getter
     public List<MenuItem> getDessertsMenuItems() {
-        return dessertsMenuItems;
+
+        return List.copyOf(dessertsMenuItems);
     }
 
     //setter
-    public void setBurgersMenuItems(List<MenuItem> burgerMenuItems) {
-        this.burgerMenuItems = burgerMenuItems;
+    public void setBurgersMenuItems(String name, double price, String comment) {
+        burgerMenuItems.add(new MenuItem(name, price, comment));
     }
 
     //setter
-    public void setDrinksMenuItems(List<MenuItem> drinksMenuItems) {
-        this.drinksMenuItems = drinksMenuItems;
+    public void setDrinksMenuItems(String name, double price, String comment) {
+        drinksMenuItems.add(new MenuItem(name, price, comment));
     }
 
     //setter
-    public void setDessertsMenuItems(List<MenuItem> dessertsMenuItems) {
-        this.dessertsMenuItems = dessertsMenuItems;
+    public void setDessertsMenuItems(String name, double price, String comment) {
+        dessertsMenuItems.add(new MenuItem(name, price, comment));
     }
 
     //버거 메뉴 카테고리 이름 반환
