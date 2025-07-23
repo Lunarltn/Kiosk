@@ -38,9 +38,19 @@ public class MenuItem {
     public void setPrice(double price) {
         this.price = price;
     }
-    
+
     //setter
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    /**
+     * {@link MenuItem}의 요소들을 한 줄로 반환한다.
+     *
+     * @return {@link MenuItem}을 {@link String} 타입으로 반환
+     */
+    @Override
+    public String toString() {
+        return name + " | " + "W " + price + " | " + comment;
     }
 }
