@@ -3,7 +3,6 @@ package com.example.kiosk;
 import com.example.enums.MenuType;
 import com.example.enums.User;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.List;
@@ -83,33 +82,27 @@ public class Kiosk {
      */
     private void runMenu(MenuType menuType) {
         Scanner sc = new Scanner(System.in);
-        List<MenuItem> menuItems = menu.getMenuItems(menuType);
 
         while (true) {
-            System.out.println(menuType.getMenuName());
-
-            for (int i = 0; i < menuItems.size(); i++) {
-                System.out.println(i + 1 + ". " + menuItems.get(i).formatMenuItem());
-            }
-            System.out.println("0. 뒤로가기");
+            menu.displayMenuItem(menuType);
 
             try {
                 int menuSelection = sc.nextInt();
                 if (menuSelection == 0)
                     break;
                 else if
-                (!(menuSelection > 0 && menuSelection <= menuItems.size()))
+                (!(menuSelection > 0 && menuSelection <= menu.getMenuItems(menuType).size()))
                     throw new InputMismatchException();
                 int index = menuSelection - 1;
 
-                System.out.println("선택한 메뉴: " + menuItems.get(index).formatMenuItem());
-                System.out.println("\n" + '"' + menuItems.get(index).formatMenuItem() + '"');
+                System.out.println("선택한 메뉴: " + menu.getMenuItem(menuType, index).toString());
+                System.out.println("\n" + '"' + menu.getMenuItem(menuType, index).toString() + '"');
                 System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
                 System.out.println("1. 확인      2. 취소");
 
                 int checkSelection = sc.nextInt();
                 if (checkSelection == 1) {
-                    cart.addItem(menuItems.get(index));
+                    cart.addItem(menu.getMenuItem(menuType, index));
                 } else if (checkSelection == 2) break;
                 else throw new InputMismatchException();
 
@@ -131,12 +124,8 @@ public class Kiosk {
         Scanner sc = new Scanner(System.in);
 
         while (true) {
-            System.out.println("아래와 같이 주문 하시겠습니까?");
-            System.out.println("\n[ Orders ]");
-            cart.printCartList();
-            System.out.println("\n[ Total ]");
-            System.out.println("W " + cart.getCartTotalPrice());
-            System.out.println("\n1. 주문      2. 메뉴판");
+            cart.displayCartOrder();
+
             try {
                 int menuSelection = sc.nextInt();
                 if (menuSelection == 1) {
@@ -161,10 +150,8 @@ public class Kiosk {
 
         while (true) {
             System.out.println("할인 정보를 입력해주세요.");
-            for (int i = 0; i < User.values().length; i++) {
-                User user = User.values()[i];
-                System.out.println(i + 1 + ". " + user.getName() + " : " + (user.getDiscount() * 100) + "%");
-            }
+            User.displayDiscount();
+
             try {
                 int discountSelection = sc.nextInt();
                 if (!(discountSelection > 0 && discountSelection <= User.values().length))
@@ -184,11 +171,28 @@ public class Kiosk {
     }
 
     /**
-     * 카트에 있는 주문들을 취소한다.
+     * 사용자 입력을 받아 카트에 있는 주문을 취소한다.
      */
     private void CancelOrder() {
-        cart.clearCart();
-        System.out.println("주문이 취소되었습니다.");
+        Scanner sc = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("삭제할 메뉴명을 입력해 주세요.");
+            cart.displayCart();
+            System.out.println("0. 종료");
+
+            try {
+                String input = sc.next();
+                if (input.equals("0")) break;
+                cart.deleteItem(input);
+
+                System.out.println("주문이 취소되었습니다.");
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("해당 이름을 가진 메뉴를 찾을 수 없습니다.");
+                sc.nextLine();
+            }
+        }
     }
 
     /**
@@ -196,9 +200,7 @@ public class Kiosk {
      */
     void printMainMenu() {
         System.out.println("[ MAIN MENU ]");
-        System.out.println("1. Burgers");
-        System.out.println("2. Drinks");
-        System.out.println("3. Desserts");
+        menu.displayMenuList();
         System.out.println("0. 종료      | 종료");
     }
 

@@ -1,5 +1,7 @@
 package com.example.enums;
 
+import java.sql.Statement;
+
 /**
  * 유저의 종류와 할인율을 관리하는 열거형
  */
@@ -25,5 +27,17 @@ public enum User {
     //getter
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return getName() + " : " + (getDiscount() * 100) + "%";
+    }
+
+    public static void displayDiscount() {
+        for (int i = 0; i < values().length; i++) {
+            User user = values()[i];
+            System.out.println(i + 1 + ". " + user.toString());
+        }
     }
 }
