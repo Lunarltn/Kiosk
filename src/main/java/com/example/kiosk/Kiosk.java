@@ -153,9 +153,10 @@ public class Kiosk {
                 if (!(discountSelection > 0 && discountSelection <= User.values().length))
                     throw new InputMismatchException();
 
-                double totalPrice = cart.getCartTotalPrice()
-                        - cart.getCartTotalPrice()
-                        * User.values()[discountSelection - 1].getDiscount();
+                int index = discountSelection - 1;
+                double price = cart.getCartTotalPrice();
+                double totalPrice = price
+                        - price * User.values()[index].getDiscount();
 
                 System.out.println("\n주문이 완료되었습니다. 금액은 W " + String.format("%.2f", totalPrice) + " 입니다.");
                 cart.clearCart();

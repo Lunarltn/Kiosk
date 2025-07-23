@@ -51,10 +51,7 @@ public class Cart {
      * 장바구니에 있는 아이템들의 가격 합계를 반환한다.
      */
     public double getCartTotalPrice() {
-        double sum = 0;
-        for (MenuItem menuItem : cart) {
-            sum += menuItem.getPrice();
-        }
+        double sum = cart.stream().mapToDouble(MenuItem::getPrice).sum();
         return Math.round(sum * 10) / 10.0;
     }
 
