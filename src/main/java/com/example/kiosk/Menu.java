@@ -44,9 +44,7 @@ public class Menu {
     public void displayMenuItem(MenuType menuType) {
         System.out.println(menuType.getMenuName());
         AtomicInteger i = new AtomicInteger(1);
-        menuItems.get(menuType).stream()
-                .map(MenuItem::toString)
-                .forEach(s -> System.out.println(i.getAndIncrement() + ". " + s));
+        menuItems.get(menuType).forEach(s -> System.out.println(i.getAndIncrement() + ". " + s));
         System.out.println("0. 뒤로가기");
     }
 

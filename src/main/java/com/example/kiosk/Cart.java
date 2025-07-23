@@ -44,9 +44,7 @@ public class Cart {
      * 장바구니에 있는 아이템들을 콘솔에 출력한다.
      */
     public void displayCart() {
-        cart.stream()
-                .map(MenuItem::toString)
-                .forEach(System.out::println);
+        cart.forEach(System.out::println);
     }
 
     /**
@@ -57,7 +55,7 @@ public class Cart {
         for (MenuItem menuItem : cart) {
             sum += menuItem.getPrice();
         }
-        return sum;
+        return Math.round(sum * 10) / 10.0;
     }
 
     /**
@@ -78,7 +76,7 @@ public class Cart {
                         if (!menuItem.getName().equals(name))
                             return true;
 
-                        System.out.println("제거 | " + menuItem.getName());
+                        System.out.println("제거 | " + menuItem);
                         return false;
                     })
                     .collect(Collectors.toList());

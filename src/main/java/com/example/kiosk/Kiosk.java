@@ -51,11 +51,11 @@ public class Kiosk {
                         break;
                     case 4:
                         if (cart.getCart().isEmpty()) throw new InputMismatchException();
-                        runOrderWithDiscount();
+                        runOrderWithDiscount(sc);
                         break;
                     case 5:
                         if (cart.getCart().isEmpty()) throw new InputMismatchException();
-                        CancelOrder();
+                        CancelOrder(sc);
                         break;
                     case 0:
                         break;
@@ -120,16 +120,14 @@ public class Kiosk {
      * 주문시 할인 유형을 입력받아 할인율을 적용한 주문총액을 콘솔에 출력한다.
      * 0과 메뉴 이외의 숫자나 문자를 입력한 경우 주문이 취소된다.</p>
      */
-    private void runOrderWithDiscount() {
-        Scanner sc = new Scanner(System.in);
-
+    private void runOrderWithDiscount(Scanner sc) {
         while (true) {
             cart.displayCartOrder();
 
             try {
                 int menuSelection = sc.nextInt();
                 if (menuSelection == 1) {
-                    runDiscount();
+                    runDiscount(sc);
                     break;
                 } else if (menuSelection == 2)
                     break;
@@ -145,9 +143,7 @@ public class Kiosk {
      *
      * <p>장바구니에 담긴 메뉴들의 총액에 할인율을 적용해 출력하고, 장바구니를 비운다.</p>
      */
-    void runDiscount() {
-        Scanner sc = new Scanner(System.in);
-
+    void runDiscount(Scanner sc) {
         while (true) {
             System.out.println("할인 정보를 입력해주세요.");
             User.displayDiscount();
@@ -173,19 +169,18 @@ public class Kiosk {
     /**
      * 사용자 입력을 받아 카트에 있는 주문을 취소한다.
      */
-    private void CancelOrder() {
-        Scanner sc = new Scanner(System.in);
-
+    private void CancelOrder(Scanner sc) {
         while (true) {
-            System.out.println("삭제할 메뉴명을 입력해 주세요.");
+            System.out.println("취소할 메뉴명을 입력해 주세요.");
             cart.displayCart();
             System.out.println("0. 종료");
 
             try {
                 String input = sc.next();
-                if (input.equals("0")) break;
-                cart.deleteItem(input);
+                if (input.equals("0"))
+                    break;
 
+                cart.deleteItem(input);
                 System.out.println("주문이 취소되었습니다.");
                 break;
             } catch (InputMismatchException e) {
