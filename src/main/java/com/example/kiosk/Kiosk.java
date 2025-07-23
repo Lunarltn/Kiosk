@@ -5,7 +5,6 @@ import com.example.enums.User;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.List;
 
 /**
  * 프로그램 순서 및 흐름 제어 담당
@@ -32,13 +31,15 @@ public class Kiosk {
 
         while (true) {
             // 메인 메뉴 출력
-            printMainMenu();
+            displayMainMenu();
             // 카트안에 아이템이 있다면 오더 메뉴 출력
             if (!cart.getCart().isEmpty())
-                printOrderMenu();
+                displayOrderMenu();
 
             try {
-                int selection = sc.nextInt();
+                int selection
+                        = readIntInRange(sc, 0, cart.getCart().isEmpty() ? 3 : 5);
+
                 switch (selection) {
                     case 1:
                         runMenu(MenuType.Burger);
@@ -50,20 +51,17 @@ public class Kiosk {
                         runMenu(MenuType.Dessert);
                         break;
                     case 4:
-                        if (cart.getCart().isEmpty()) throw new InputMismatchException();
                         runOrderWithDiscount(sc);
                         break;
                     case 5:
-                        if (cart.getCart().isEmpty()) throw new InputMismatchException();
                         CancelOrder(sc);
                         break;
                     case 0:
                         break;
-                    default:
-                        throw new InputMismatchException();
                 }
                 if (selection == 0)
                     break;
+
             } catch (InputMismatchException e) {
                 System.out.println("[Error] 올바른 메뉴를 선택해 주세요.");
                 sc.nextLine();
@@ -87,12 +85,10 @@ public class Kiosk {
             menu.displayMenuItem(menuType);
 
             try {
-                int menuSelection = sc.nextInt();
+                int menuSelection = readIntInRange(sc, 0, menu.getMenuItems(menuType).size());
                 if (menuSelection == 0)
                     break;
-                else if
-                (!(menuSelection > 0 && menuSelection <= menu.getMenuItems(menuType).size()))
-                    throw new InputMismatchException();
+
                 int index = menuSelection - 1;
 
                 System.out.println("선택한 메뉴: " + menu.getMenuItem(menuType, index).toString());
@@ -100,14 +96,15 @@ public class Kiosk {
                 System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
                 System.out.println("1. 확인      2. 취소");
 
-                int checkSelection = sc.nextInt();
+                int checkSelection = readIntInRange(sc, 1, 2);
                 if (checkSelection == 1) {
                     cart.addItem(menu.getMenuItem(menuType, index));
-                } else if (checkSelection == 2) break;
-                else throw new InputMismatchException();
+                } else if (checkSelection == 2)
+                    break;
 
             } catch (InputMismatchException e) {
                 System.out.println("[Error] 입력이 올바르지 않습니다.");
+                sc.nextLine();
             }
         }
     }
@@ -125,13 +122,12 @@ public class Kiosk {
             cart.displayCartOrder();
 
             try {
-                int menuSelection = sc.nextInt();
+                int menuSelection = readIntInRange(sc, 1, 2);
                 if (menuSelection == 1) {
                     runDiscount(sc);
                     break;
                 } else if (menuSelection == 2)
                     break;
-                else throw new InputMismatchException();
             } catch (InputMismatchException e) {
                 System.out.println("[Error] 입력이 올바르지 않습니다.");
             }
@@ -149,9 +145,7 @@ public class Kiosk {
             User.displayDiscount();
 
             try {
-                int discountSelection = sc.nextInt();
-                if (!(discountSelection > 0 && discountSelection <= User.values().length))
-                    throw new InputMismatchException();
+                int discountSelection = readIntInRange(sc, 1, User.values().length);
 
                 int index = discountSelection - 1;
                 double price = cart.getCartTotalPrice();
@@ -192,9 +186,24 @@ public class Kiosk {
     }
 
     /**
+     * 입력받은 정수가 밤위 내 일때만 반환한다.
+     *
+     * @param sc    {@link Scanner}의 인스턴스
+     * @param start 시작 정수
+     * @param end   끝 정수
+     * @return 범위 내의 정수를 반환한다.
+     */
+    private int readIntInRange(Scanner sc, int start, int end) throws InputMismatchException {
+        int input = sc.nextInt();
+        if (input < start || input > end)
+            throw new InputMismatchException("[Error] 입력값은 " + start + "부터 " + end + " 사이여야 합니다.");
+        return input;
+    }
+
+    /**
      * 메인 메뉴 콘솔 출력
      */
-    void printMainMenu() {
+    void displayMainMenu() {
         System.out.println("[ MAIN MENU ]");
         menu.displayMenuList();
         System.out.println("0. 종료      | 종료");
@@ -203,7 +212,7 @@ public class Kiosk {
     /**
      * 오더 메뉴 콘솔 출력
      */
-    void printOrderMenu() {
+    void displayOrderMenu() {
         System.out.println("[ ORDER MENU ]");
         System.out.println("4. Orders   | 장바구니를 확인 후 주문합니다.");
         System.out.println("5. Cancel   | 진행중인 주문을 취소합니다.");
