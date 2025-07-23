@@ -70,11 +70,11 @@ public class Cart {
         if (isMatch) {
             cart = cart.stream()
                     .filter(menuItem -> {
-                        if (!menuItem.getName().equals(name))
-                            return true;
-
-                        System.out.println("제거 | " + menuItem);
-                        return false;
+                        if (menuItem.getName().equals(name)) {
+                            System.out.println("제거 | " + menuItem);
+                            return false;
+                        }
+                        return true;
                     })
                     .collect(Collectors.toList());
         } else
