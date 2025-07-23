@@ -49,7 +49,8 @@ public class MenuItem {
      *
      * @return {@link MenuItem}을 {@link String} 타입으로 반환
      */
-    public String formatMenuItem() {
+    @Override
+    public String toString() {
         return name + " | " + "W " + price + " | " + comment;
     }
 }

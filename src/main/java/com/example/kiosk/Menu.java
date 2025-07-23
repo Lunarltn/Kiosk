@@ -1,59 +1,58 @@
 package com.example.kiosk;
 
+import com.example.enums.MenuType;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * MenuItem 클래스를 관리하는 클래스
  */
 public class Menu {
-    private final List<MenuItem> burgerMenuItems = new ArrayList<MenuItem>();
-    private final List<MenuItem> drinksMenuItems = new ArrayList<MenuItem>();
-    private final List<MenuItem> dessertsMenuItems = new ArrayList<MenuItem>();
+    private final Map<MenuType, List<MenuItem>> menuItems = new HashMap<>();
 
-    //getter
-    public List<MenuItem> getBurgersMenuItems() {
-        return List.copyOf(burgerMenuItems);
+    Menu() {
+        for (MenuType menuType : MenuType.values())
+            menuItems.put(menuType, new ArrayList<>());
     }
 
     //getter
-    public List<MenuItem> getDrinksMenuItems() {
-        return List.copyOf(drinksMenuItems);
+    public List<MenuItem> getMenuItems(MenuType menuType) {
+        return List.copyOf(menuItems.get(menuType));
     }
 
     //getter
-    public List<MenuItem> getDessertsMenuItems() {
-
-        return List.copyOf(dessertsMenuItems);
+    public MenuItem getMenuItem(MenuType menuType, int index) {
+        return menuItems.get(menuType).get(index);
     }
 
     //setter
-    public void addBurgersMenuItem(String name, double price, String comment) {
-        burgerMenuItems.add(new MenuItem(name, price, comment));
+    public void addMenuItem(MenuType menuType, String name, double price, String comment) {
+        menuItems.get(menuType).add(new MenuItem(name, price, comment));
     }
 
-    //setter
-    public void addDrinksMenuItem(String name, double price, String comment) {
-        drinksMenuItems.add(new MenuItem(name, price, comment));
+    /**
+     * {@link MenuType}의 메뉴들을 콘솔에 출력한다.
+     *
+     * <p>메뉴와 선택지를 출력한다.</p>
+     *
+     * @param menuType 출력할 메뉴의 타입
+     */
+    public void displayMenuItem(MenuType menuType) {
+        System.out.println(menuType.getMenuName());
+        AtomicInteger i = new AtomicInteger(1);
+        menuItems.get(menuType).forEach(s -> System.out.println(i.getAndIncrement() + ". " + s));
+        System.out.println("0. 뒤로가기");
     }
 
-    //setter
-    public void addDessertsMenuItem(String name, double price, String comment) {
-        dessertsMenuItems.add(new MenuItem(name, price, comment));
-    }
-
-    //버거 메뉴 카테고리 이름 반환
-    public String getBurgersMenuName() {
-        return "[ BURGERS MENU ]";
-    }
-
-    //음료 메뉴 카테고리 이름 반환
-    public String getDrinksMenuName() {
-        return "[ DRINKS MENU ]";
-    }
-
-    //디저트 메뉴 카테고리 이름 반환
-    public String getDessertsMenuName() {
-        return "[ DESSERTS MENU ]";
+    /**
+     * 메뉴판을 콘솔에 출력한다.
+     */
+    public void displayMenuList() {
+        for (int i = 0; i < MenuType.values().length; i++)
+            System.out.println(i + 1 + ". " + MenuType.values()[i].toString() + "s");
     }
 }
